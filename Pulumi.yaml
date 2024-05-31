@@ -1,0 +1,7 @@
+name: homelab-pulumi
+runtime: go
+description: A minimal Kubernetes Go Pulumi program
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-go
