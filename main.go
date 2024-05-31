@@ -10,13 +10,13 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Deploy MetalLB
-		err := metallb.Deploy(ctx)
+		res, err := metallb.Deploy(ctx, nil)
 		if err != nil {
 			return err
 		}
 
 		// Deploy  Ingress-Nginx Controller
-		err = ingressnginx.Deploy(ctx)
+		res, err = ingressnginx.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}

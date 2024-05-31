@@ -7,12 +7,12 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-func Deploy(ctx *pulumi.Context) error {
-	stack, err := yamlv2.NewConfigFile(ctx, "metallb-manifest", &yamlv2.ConfigFileArgs{
+func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) {
+	res, err := yamlv2.NewConfigFile(ctx, "metallb-manifest", &yamlv2.ConfigFileArgs{
 		File: pulumi.String("https://raw.githubusercontent.com/metallb/metallb/v0.14.5/config/manifests/metallb-native.yaml"),
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = apiextensions.NewCustomResource(ctx, "metallb-ipaddresspool", &apiextensions.CustomResourceArgs{
@@ -29,9 +29,9 @@ func Deploy(ctx *pulumi.Context) error {
 				},
 			},
 		},
-	}, pulumi.DependsOn([]pulumi.Resource{stack}))
+	}, pulumi.DependsOn([]pulumi.Resource{res}))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_, err = apiextensions.NewCustomResource(ctx, "metallb-l2advertisement", &apiextensions.CustomResourceArgs{
@@ -48,10 +48,12 @@ func Deploy(ctx *pulumi.Context) error {
 				},
 			},
 		},
-	}, pulumi.DependsOn([]pulumi.Resource{stack}))
+	}, pulumi.DependsOn([]pulumi.Resource{res}))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	resId := pulumi.Resource(res)
+
+	return &resId, nil
 }
