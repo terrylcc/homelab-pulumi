@@ -25,7 +25,7 @@ func Deploy(ctx *pulumi.Context) error {
 		OtherFields: map[string]interface{}{
 			"spec": map[string]interface{}{
 				"addresses": []interface{}{
-					"10.9.0.0/24",
+					"10.9.0.1-10.9.0.254",
 				},
 			},
 		},
