@@ -1,8 +1,8 @@
 package main
 
 import (
-	"homelab-pulumi/kubernetes/ingressnginx"
-	"homelab-pulumi/kubernetes/metallb"
+	"homelab-pulumi/k8s/ingressnginx"
+	"homelab-pulumi/k8s/metallb"
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
