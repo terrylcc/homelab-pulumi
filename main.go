@@ -1,6 +1,7 @@
 package main
 
 import (
+	"homelab-pulumi/k8s/democraticcsi"
 	"homelab-pulumi/k8s/ingressnginx"
 	"homelab-pulumi/k8s/metallb"
 
@@ -15,8 +16,14 @@ func main() {
 			return err
 		}
 
-		// Deploy  Ingress-Nginx Controller
+		// Deploy Ingress-Nginx controller
 		res, err = ingressnginx.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy Democratic CSI driver
+		res, err = democraticcsi.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}
