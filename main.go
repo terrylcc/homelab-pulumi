@@ -1,6 +1,7 @@
 package main
 
 import (
+	"homelab-pulumi/k8s/certmanager"
 	"homelab-pulumi/k8s/democraticcsi"
 	"homelab-pulumi/k8s/ingressnginx"
 	"homelab-pulumi/k8s/metallb"
@@ -24,6 +25,12 @@ func main() {
 
 		// Deploy Democratic CSI driver
 		res, err = democraticcsi.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy Cert-Manager
+		res, err = certmanager.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}
