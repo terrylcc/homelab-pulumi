@@ -40,7 +40,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 				},
 			},
 		},
-	})
+	}, pulumi.DependsOn([]pulumi.Resource{ns}))
 	if err != nil {
 		return nil, err
 	}
