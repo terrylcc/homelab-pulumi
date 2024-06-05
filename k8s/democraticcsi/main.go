@@ -9,7 +9,7 @@ import (
 )
 
 func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) {
-	cfg := config.New(ctx, "")
+	cfg := config.New(ctx, "democraticcsi")
 
 	privateKey := cfg.RequireSecret("privateKey")
 
