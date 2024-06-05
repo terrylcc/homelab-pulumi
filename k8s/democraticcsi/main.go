@@ -2,7 +2,7 @@ package democraticcsi
 
 import (
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
-	helmv4 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/helm/v4"
+	helmv3 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/helm/v3"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
@@ -22,10 +22,10 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 		return nil, err
 	}
 
-	res, err := helmv4.NewChart(ctx, "democratic-csi", &helmv4.ChartArgs{
+	res, err := helmv3.NewRelease(ctx, "democratic-csi", &helmv3.ReleaseArgs{
 		Namespace: ns.Metadata.Name(),
 		Chart:     pulumi.String("democratic-csi"),
-		RepositoryOpts: &helmv4.RepositoryOptsArgs{
+		RepositoryOpts: &helmv3.RepositoryOptsArgs{
 			Repo: pulumi.String("https://democratic-csi.github.io/charts"),
 		},
 		ValueYamlFiles: pulumi.AssetOrArchiveArray{
