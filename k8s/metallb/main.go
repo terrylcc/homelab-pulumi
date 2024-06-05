@@ -8,7 +8,7 @@ import (
 )
 
 func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) {
-	res, err := yamlv2.NewConfigFile(ctx, "metallb-manifest", &yamlv2.ConfigFileArgs{
+	res, err := yamlv2.NewConfigFile(ctx, "metallb", &yamlv2.ConfigFileArgs{
 		File: pulumi.String("https://raw.githubusercontent.com/metallb/metallb/v0.14.5/config/manifests/metallb-native.yaml"),
 	})
 	if err != nil {
