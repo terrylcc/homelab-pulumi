@@ -32,7 +32,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 		StringData: pulumi.StringMap{
 			"api-token": apiToken,
 		},
-	})
+	}, pulumi.DependsOn([]pulumi.Resource{res}))
 	if err != nil {
 		return nil, err
 	}
