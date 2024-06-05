@@ -29,7 +29,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 			Repo: pulumi.String("https://democratic-csi.github.io/charts"),
 		},
 		ValueYamlFiles: pulumi.AssetOrArchiveArray{
-			pulumi.NewFileAsset("./k8s/democraticcsi/values.yaml"),
+			pulumi.NewFileAsset("./assets/democraticcsi/values.yaml"),
 		},
 		Values: pulumi.Map{
 			"driver": pulumi.Map{
