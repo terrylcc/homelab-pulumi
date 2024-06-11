@@ -1,6 +1,7 @@
 package main
 
 import (
+	"homelab-pulumi/k8s/authentik"
 	"homelab-pulumi/k8s/certmanager"
 	"homelab-pulumi/k8s/democraticcsi"
 	"homelab-pulumi/k8s/ingressnginx"
@@ -31,6 +32,12 @@ func main() {
 
 		// Deploy Cert-Manager
 		res, err = certmanager.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy Authentik
+		res, err = authentik.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}
