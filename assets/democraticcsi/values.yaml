@@ -84,7 +84,7 @@ driver:
       zvolDedup: off
       zvolEnableReservation: false
       # 512, 1K, 2K, 4K, 8K, 16K, 64K, 128K default is 16K
-      zvolBlocksize: 64K
+      zvolBlocksize: 16K
 
     iscsi:
       shareStrategy: "targetCli"
