@@ -6,6 +6,7 @@ import (
 	"homelab-pulumi/k8s/democraticcsi"
 	"homelab-pulumi/k8s/ingressnginx"
 	"homelab-pulumi/k8s/metallb"
+	"homelab-pulumi/k8s/ocis"
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -38,6 +39,12 @@ func main() {
 
 		// Deploy Authentik
 		res, err = authentik.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy ownCloud Infinite Scale
+		res, err = ocis.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}

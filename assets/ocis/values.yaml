@@ -1,0 +1,191 @@
+externalDomain: ocis.terri.cc
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: 128g
+  tls:
+    - hosts:
+        - ocis.terri.cc
+      secretName: ocis-terri-cc-tls
+
+http:
+  cors:
+    allow_origins: []
+
+features:
+  language:
+    default: "en"
+  externalUserManagement:
+    enabled: true
+    adminUUID: ""
+    autoprovisionAccounts: false
+    oidc:
+      issuerURI: "https://auth.terri.cc/application/o/ocis/"
+      sessionManagementLink: "https://auth.terri.cc/application/o/userinfo/"
+      editAccountLink: "https://auth.terri.cc/application/o/userinfo/"
+      webClientID: ""
+      userIDClaim: sub
+      userIDClaimAttributeMapping: userid
+
+      # Avoid validating the issuer URI
+      accessTokenVerifyMethod: "none"
+
+      roleAssignment:
+        enabled: false
+        claim: roles
+        mapping:
+          - role_name: admin
+            claim_value: ocisAdmin
+          - role_name: user
+            claim_value: ocisUser
+          - role_name: guest
+            claim_value: ocisUser
+
+    ldap:
+      writeable: false
+      readOnlyAttributes: []
+      uri: ""
+      certTrusted: true
+      insecure: true
+      bindDN: cn=ldapservice,ou=users,dc=ldap,dc=goauthentik,dc=io
+      refintEnabled: false
+      passwordModifyExOpEnabled: false
+
+      user:
+        schema:
+          id: uid
+          idIsOctetString: false
+          mail: mail
+          displayName: displayName
+          userName: cn
+          userType: userType
+        baseDN: ou=users,dc=ldap,dc=goauthentik,dc=io
+        scope: sub
+        substringFilterType: any
+        filter:
+        objectClass: inetOrgPerson
+
+      group:
+        schema:
+          id: uid
+          idIsOctetString: false
+          mail: mail
+          displayName: cn
+          groupName: cn
+          member: member
+        baseDN: ou=groups,dc=ldap,dc=goauthentik,dc=io
+        createBaseDN: ""
+        scope: sub
+        filter: (!(objectClass=goauthentik.io/ldap/virtual-group))
+        objectClass: groupOfNames
+
+      disableUsers:
+        disableMechanism: none
+
+services:
+  nats:
+    persistence:
+      enabled: true
+      chownInitContainer: false
+      storageClassName: zfs-iscsi-csi
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      finalizers:
+        - kubernetes.io/pvc-protection
+      selectorLabels: {}
+
+  search:
+    persistence:
+      enabled: true
+      chownInitContainer: false
+      storageClassName: zfs-iscsi-csi
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      finalizers:
+        - kubernetes.io/pvc-protection
+      selectorLabels: {}
+
+  storagesystem:
+    persistence:
+      enabled: true
+      chownInitContainer: false
+      storageClassName: zfs-iscsi-csi
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      finalizers:
+        - kubernetes.io/pvc-protection
+      selectorLabels: {}
+
+  storageusers:
+    events:
+      consumer:
+        concurrency: 10
+
+    storageBackend:
+      driver: ocis
+      driverConfig:
+        ocis:
+          maxConcurrency: 100
+          metadataBackend: messagepack
+
+    persistence:
+      enabled: true
+      chownInitContainer: false
+      storageClassName: zfs-iscsi-csi
+      accessModes:
+        - ReadWriteOnce
+      size: 4Ti
+      annotations: {}
+      finalizers:
+        - kubernetes.io/pvc-protection
+      selectorLabels: {}
+
+  thumbnails:
+    persistence:
+      enabled: true
+      chownInitContainer: false
+      storageClassName: zfs-iscsi-csi
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      finalizers: []
+      selectorLabels: {}
+
+  web:
+    persistence:
+      enabled: true
+      chownInitContainer: false
+      storageClassName: zfs-iscsi-csi
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      annotations: {}
+      finalizers: []
+      selectorLabels: {}
+
+configRefs:
+  storageusersConfigRef: "storage-users"
+  graphConfigRef: "graph"
+
+secretRefs:
+  jwtSecretRef: "jwt-secret"
+  ldapSecretRef: "ldap-bind-secret"
+  machineAuthApiKeySecretRef: "machine-auth-api-key"
+  storagesystemJwtSecretRef: "storage-system-jwt-secret"
+  storagesystemSecretRef: "storage-system"
+  thumbnailsSecretRef: "thumbnails-transfer-secret"
+  transferSecretSecretRef: "transfer-secret"
+
+insecure:
+  oidcIdpInsecure: false
+  ocisHttpApiInsecure: false
