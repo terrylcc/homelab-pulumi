@@ -8,13 +8,16 @@ server:
     ingressClassName: nginx
     enabled: true
     hosts:
-      - authentik.terri.cc
+      - auth.terri.cc
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "Content-Security-Policy: frame-ancestors 'self' https://terri.cc https://*.terri.cc";
     tls:
       - hosts:
-          - authentik.terri.cc
-        secretName: authentik-terri-cc-tls
+          - auth.terri.cc
+        secretName: auth-terri-cc-tls
 
 postgresql:
   enabled: true
