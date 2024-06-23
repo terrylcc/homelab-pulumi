@@ -145,7 +145,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 		return nil, err
 	}
 
-	storageUsersCfg, err := corev1.NewConfigMap(ctx, "storage-users", &corev1.ConfigMapArgs{
+	storageUsersConfig, err := corev1.NewConfigMap(ctx, "storage-users", &corev1.ConfigMapArgs{
 		Metadata: &metav1.ObjectMetaArgs{
 			Name:      pulumi.String("storage-users"),
 			Namespace: pulumi.String("ocis"),
@@ -158,7 +158,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 		return nil, err
 	}
 
-	graphCfg, err := corev1.NewConfigMap(ctx, "graph", &corev1.ConfigMapArgs{
+	graphConfig, err := corev1.NewConfigMap(ctx, "graph", &corev1.ConfigMapArgs{
 		Metadata: &metav1.ObjectMetaArgs{
 			Name:      pulumi.String("graph"),
 			Namespace: pulumi.String("ocis"),
@@ -199,8 +199,8 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 		transferSec,
 		thumbnailsTransferSec,
 		ldapBindSec,
-		storageUsersCfg,
-		graphCfg,
+		storageUsersConfig,
+		graphConfig,
 	}))
 	if err != nil {
 		return nil, err
