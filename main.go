@@ -1,6 +1,7 @@
 package main
 
 import (
+	"homelab-pulumi/k8s/affine"
 	"homelab-pulumi/k8s/authentik"
 	"homelab-pulumi/k8s/certmanager"
 	"homelab-pulumi/k8s/democraticcsi"
@@ -45,6 +46,12 @@ func main() {
 
 		// Deploy ownCloud Infinite Scale
 		res, err = ocis.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy AFFiNE
+		res, err = affine.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}
