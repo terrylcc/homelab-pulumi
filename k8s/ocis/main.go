@@ -13,8 +13,6 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 
 	adminUuid := cfg.Require("adminUuid")
 
-	ldapUri := cfg.Require("ldapUri")
-
 	webClientId := cfg.Require("webClientId")
 
 	jwtSecret := cfg.RequireSecret("jwtSecret")
@@ -183,9 +181,6 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 					"adminUUID": pulumi.String(adminUuid),
 					"oidc": pulumi.Map{
 						"webClientID": pulumi.String(webClientId),
-					},
-					"ldap": pulumi.Map{
-						"uri": pulumi.String(ldapUri),
 					},
 				},
 			},

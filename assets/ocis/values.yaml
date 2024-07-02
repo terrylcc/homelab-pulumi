@@ -23,7 +23,7 @@ features:
     adminUUID: ""
     autoprovisionAccounts: false
     oidc:
-      issuerURI: "https://auth.terri.cc/application/o/ocis/"
+      issuerURI: "https://auth.terri.cc/application/o/ocis-web/"
       sessionManagementLink: "https://auth.terri.cc/application/o/userinfo/"
       editAccountLink: "https://auth.terri.cc/application/o/userinfo/"
       webClientID: ""
@@ -47,7 +47,7 @@ features:
     ldap:
       writeable: false
       readOnlyAttributes: []
-      uri: ""
+      uri: ldaps://ak-outpost-ldap.authentik.svc.cluster.local:636
       certTrusted: true
       insecure: true
       bindDN: cn=ldapservice,ou=users,dc=ldap,dc=goauthentik,dc=io
