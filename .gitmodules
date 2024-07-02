@@ -1,0 +1,3 @@
+[submodule "assets/ocis/ocis-charts"]
+	path = assets/ocis/ocis-charts
+	url = https://github.com/owncloud/ocis-charts.git
