@@ -27,6 +27,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 	res, err := helmv3.NewRelease(ctx, "authentik", &helmv3.ReleaseArgs{
 		Namespace: ns.Metadata.Name(),
 		Chart:     pulumi.String("authentik"),
+		Version:   pulumi.String("2024.4.2"),
 		RepositoryOpts: &helmv3.RepositoryOptsArgs{
 			Repo: pulumi.String("https://charts.goauthentik.io"),
 		},
@@ -46,6 +47,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 				},
 			},
 		},
+		SkipAwait: pulumi.Bool(true),
 	}, pulumi.DependsOn([]pulumi.Resource{ns}))
 	if err != nil {
 		return nil, err
