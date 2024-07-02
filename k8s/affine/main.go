@@ -15,11 +15,11 @@ import (
 func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) {
 	cfg := config.New(ctx, "affine")
 
-	postgresPassword := cfg.RequireSecret("postgresPassword")
-
-	affineEmail := cfg.RequireSecret("affineEmail")
+	affineEmail := cfg.Require("affineEmail")
 
 	affinePassword := cfg.RequireSecret("affinePassword")
+
+	postgresPassword := cfg.RequireSecret("postgresPassword")
 
 	ns, err := corev1.NewNamespace(ctx, "affine", &corev1.NamespaceArgs{
 		Metadata: &metav1.ObjectMetaArgs{
@@ -288,7 +288,8 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 			Namespace: pulumi.String("affine"),
 		},
 		Type: pulumi.String("Opaque"),
-		Data: pulumi.StringMap{
+		StringData: pulumi.StringMap{
+			"email":    pulumi.String(affineEmail),
 			"password": affinePassword,
 		},
 	}, pulumi.DependsOn([]pulumi.Resource{ns}))
@@ -371,8 +372,13 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 							},
 							Env: corev1.EnvVarArray{
 								&corev1.EnvVarArgs{
-									Name:  pulumi.String("AFFINE_ADMIN_EMAIL"),
-									Value: affineEmail,
+									Name: pulumi.String("AFFINE_ADMIN_EMAIL"),
+									ValueFrom: &corev1.EnvVarSourceArgs{
+										SecretKeyRef: &corev1.SecretKeySelectorArgs{
+											Key:  pulumi.String("email"),
+											Name: pulumi.String("affine-secret"),
+										},
+									},
 								},
 								&corev1.EnvVarArgs{
 									Name: pulumi.String("AFFINE_ADMIN_PASSWORD"),
@@ -490,7 +496,8 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 			Name:      pulumi.String("affine"),
 			Namespace: pulumi.String("affine"),
 			Annotations: pulumi.StringMap{
-				"cert-manager.io/cluster-issuer": pulumi.String("letsencrypt-prod"),
+				"cert-manager.io/cluster-issuer":              pulumi.String("letsencrypt-prod"),
+				"nginx.ingress.kubernetes.io/proxy-body-size": pulumi.String("256G"),
 			},
 		},
 		Spec: &networkingv1.IngressSpecArgs{
@@ -514,6 +521,14 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 							},
 						},
 					},
+				},
+			},
+			Tls: networkingv1.IngressTLSArray{
+				&networkingv1.IngressTLSArgs{
+					Hosts: pulumi.StringArray{
+						pulumi.String("affine.terri.cc"),
+					},
+					SecretName: pulumi.String("affine-terri-cc-tls"),
 				},
 			},
 		},
