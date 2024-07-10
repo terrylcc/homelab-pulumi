@@ -25,6 +25,7 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 	res, err := helmv3.NewRelease(ctx, "democratic-csi", &helmv3.ReleaseArgs{
 		Namespace: pulumi.String("democratic-csi"),
 		Chart:     pulumi.String("democratic-csi"),
+		Version:   pulumi.String("0.14.6"),
 		RepositoryOpts: &helmv3.RepositoryOptsArgs{
 			Repo: pulumi.String("https://democratic-csi.github.io/charts"),
 		},
