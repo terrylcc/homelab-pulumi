@@ -6,6 +6,7 @@ import (
 	"homelab-pulumi/k8s/certmanager"
 	"homelab-pulumi/k8s/democraticcsi"
 	"homelab-pulumi/k8s/ingressnginx"
+	"homelab-pulumi/k8s/kubeprometheusstack"
 	"homelab-pulumi/k8s/metallb"
 	"homelab-pulumi/k8s/ocis"
 
@@ -28,6 +29,12 @@ func main() {
 
 		// Deploy Democratic CSI driver
 		res, err = democraticcsi.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy kube-prometheus-stack
+		res, err = kubeprometheusstack.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}

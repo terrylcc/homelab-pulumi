@@ -1,0 +1,55 @@
+alertmanager:
+  enabled: true
+  ingress:
+    enabled: false
+ 
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: zfs-iscsi-csi
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 8Gi
+
+grafana:
+  enabled: true
+  adminPassword: ""
+  
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    tls:
+      - hosts:
+          - grafana.terri.cc
+        secretName: grafana-terri-cc-tls
+
+prometheus:
+  enabled: true
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    tls:
+      - hosts:
+          - prometheus.terri.cc
+        secretName: prometheus-terri-cc-tls
+
+  prometheusSpec:
+    retention: 14d    
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: zfs-iscsi-csi
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 8Gi
+    
