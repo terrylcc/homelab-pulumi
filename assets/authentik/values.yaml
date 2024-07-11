@@ -5,8 +5,8 @@ authentik:
 
 server:
   ingress:
-    ingressClassName: nginx
     enabled: true
+    ingressClassName: nginx
     hosts:
       - auth.terri.cc
     annotations:
