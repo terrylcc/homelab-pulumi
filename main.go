@@ -33,12 +33,6 @@ func main() {
 			return err
 		}
 
-		// Deploy kube-prometheus-stack
-		res, err = kubeprometheusstack.Deploy(ctx, res)
-		if err != nil {
-			return err
-		}
-
 		// Deploy Cert-Manager
 		res, err = certmanager.Deploy(ctx, res)
 		if err != nil {
@@ -47,6 +41,12 @@ func main() {
 
 		// Deploy Authentik
 		res, err = authentik.Deploy(ctx, res)
+		if err != nil {
+			return err
+		}
+
+		// Deploy kube-prometheus-stack
+		res, err = kubeprometheusstack.Deploy(ctx, res)
 		if err != nil {
 			return err
 		}

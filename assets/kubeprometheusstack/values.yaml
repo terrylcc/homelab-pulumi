@@ -16,30 +16,47 @@ alertmanager:
 
 grafana:
   enabled: true
-  adminPassword: ""
-  
+ 
+  grafana.ini:
+    server:
+      root_url: https://grafana.terri.cc/
+    auth.generic_oauth:
+      name: Authentik
+      enabled: true
+      auto_login: false
+      allow_sign_up: true
+      scopes: openid,email,profile
+      
+      auth_url: https://auth.terri.cc/application/o/authorize/
+      token_url: https://auth.terri.cc/application/o/token/
+      api_url: https://auth.terri.cc/application/o/userinfo/
+      
+      client_id: ""
+      client_secret: ""
+
+      role_attribute_path: "'Viewer'"
+      skip_org_role_sync: false
+    security:
+      disable_initial_admin_creation: true
+
   ingress:
     enabled: true
     ingressClassName: nginx
+    hosts:
+      - grafana.terri.cc
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
     tls:
       - hosts:
           - grafana.terri.cc
         secretName: grafana-terri-cc-tls
+  
+  assertNoLeakedSecrets: false
 
 prometheus:
   enabled: true
-
   ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    tls:
-      - hosts:
-          - prometheus.terri.cc
-        secretName: prometheus-terri-cc-tls
+    enabled: false
 
   prometheusSpec:
     retention: 14d    
@@ -52,4 +69,3 @@ prometheus:
           resources:
             requests:
               storage: 8Gi
-    

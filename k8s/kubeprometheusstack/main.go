@@ -11,7 +11,9 @@ import (
 func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) {
 	cfg := config.New(ctx, "kubeprometheusstack")
 
-	grafanaPassword := cfg.RequireSecret("grafanaPassword")
+	oauthClientId := cfg.Require("oauthClientId")
+
+	oauthClientSecret := cfg.RequireSecret("oauthClientSecret")
 
 	ns, err := corev1.NewNamespace(ctx, "kube-prometheus-stack", &corev1.NamespaceArgs{
 		Metadata: &metav1.ObjectMetaArgs{
@@ -34,10 +36,14 @@ func Deploy(ctx *pulumi.Context, id *pulumi.Resource) (*pulumi.Resource, error) 
 		},
 		Values: pulumi.Map{
 			"grafana": pulumi.Map{
-				"adminPassword": grafanaPassword,
+				"grafana.ini": pulumi.Map{
+					"auth.generic_oauth": pulumi.Map{
+						"client_id":     pulumi.String(oauthClientId),
+						"client_secret": oauthClientSecret,
+					},
+				},
 			},
 		},
-		SkipAwait: pulumi.Bool(true),
 	}, pulumi.DependsOn([]pulumi.Resource{ns}))
 	if err != nil {
 		return nil, err
