@@ -59,7 +59,7 @@ prometheus:
     enabled: false
 
   prometheusSpec:
-    retention: 14d    
+    retention: 7d 
     storageSpec:
       volumeClaimTemplate:
         spec:
