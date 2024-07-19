@@ -68,4 +68,24 @@ prometheus:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 8Gi
+              storage: 32Gi
+
+kubeEtcd:
+  enabled: false
+
+kubeControllerManager:
+  enabled: true
+  endpoints:
+    - 10.8.0.1
+
+kubeScheduler:
+  enabled: true
+  endpoints:
+    - 10.8.0.1
+
+kubeProxy:
+  enabled: true
+  endpoints:
+    - 10.8.0.1
+    - 10.8.0.2
+    - 10.8.0.3
